@@ -5,6 +5,10 @@ let fwebsite = document.getElementById('website');
 let fimage = document.getElementById('image');
 let faddress = document.getElementById('address');
 
+// read query params from url
+let params = new Proxy(new URLSearchParams(window.location.search),{
+    get : (searchParams,prop) => searchParams.get(prop)
+})
 // update handler
 function submitHandler(event){
     event.preventDefault();
@@ -28,7 +32,7 @@ function submitHandler(event){
         window.location.href ='/'
     }).catch(err => console.log(err))
 }
-console.log('params =', params.id)
+
 
 const print = (data) => {
     fname.value = data.name;
@@ -38,10 +42,8 @@ const print = (data) => {
     faddress.value = data.address;
     fimage.value = data.image
 }
-// read query params from url
-let params = new Proxy(new URLSearchParams(window.location.search),{
-    get : (searchParams,prop) => searchParams.get(prop)
-})
+
+console.log('params =', params.id)
 console.log('params ', params.id)
 function read(){
     fetch(`/api/contact/single/${params.id}`).then(res => res.json())
