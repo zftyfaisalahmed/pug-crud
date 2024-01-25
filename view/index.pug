@@ -3,27 +3,80 @@ html(lang="en")
     head
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Document
-        link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css")
-        script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js") 
-        link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css")
-    body 
-        nav.navbar.navbar-expand-md.navbar-dark.bg-secondary
+        title File Upload 
+        link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css")
+        script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js")
+        script.
+            const url = 'http://localhost:5600';
+
+            const printData = async (files) => {
+            let fileCon = document.getElementById('files');
+                files.forEach((item,index) => {
+                    fileCon.innerHTML += `<div class="col-md-4 mt-2 mb-2">
+                                            <div class="card">
+                                                <embed src="${item.filename}" class="card-img-top" />
+                                                <div class="card-body">
+                                                    <h3 class="text-success text-center"> ${item.filename} </h3>
+
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">
+                                                            <strong>Fieldname</strong>
+                                                            <span class="float-end text-success"> ${item.fieldname} </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <strong>OriginalName</strong>
+                                                            <span class="float-end text-success"> ${item.originalname} </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <strong>Encoding</strong>
+                                                            <span class="float-end text-success"> ${item.encoding} </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <strong>Mimetype</strong>
+                                                            <span class="float-end text-success"> ${item.mimetype} </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <strong>Size</strong>
+                                                            <span class="float-end text-success"> ${item.size} </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <strong>CreatedAt</strong>
+                                                            <span class="float-end text-success"> ${new Date(item.createdAt).toLocaleString()} </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <button class="btn btn-danger">Delete</button>
+                                                </div>
+                                            </div>
+                                        </div>`;
+                });
+            }
+
+            // to read data
+            (function(){
+                fetch(`${url}/api/files`)
+                .then(res =>res.json())
+                .then(res => {
+                    console.log(`files =`, res);
+                    printData(res.files)
+                }).catch(err => console.log(err.message));
+            })()
+    body
+        nav.navbar.navbar-expand-md.navbar-dark.bg-success 
             .container 
-                a.navbar-brand(href="/") PUG-CRUD 
+                a.navbar-brand(href="/") File-Upload
                 button.navbar-toggler(data-bs-toggle="collapse", data-bs-target="#menu")
                     span.navbar-toggler-icon 
                 .collapse.navbar-collapse#menu 
                     ul.navbar-nav 
                         li.nav-item 
-                            a.nav-link(href='/') Home
+                            a.nav-link(href="/") Home 
                         li.nav-item 
-                            a.nav-link(href='/create') Create 
+                            a.nav-link(href="/file/upload") FileUpload
 
         .container 
             .row 
                 .col-md-12.text-center 
-                    h3.display-3.text-success Contact Book                     
-            .row#contacts  
-                       
-        script(src="./js/index.js")
+                    h3.display-3.text-success Files 
+            .row(id="files")
